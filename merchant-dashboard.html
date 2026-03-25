@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>Painel Comercial — Arraiá Sustentável</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } },
+      };
+    </script>
+    <style>
+      html { font-family: Inter, system-ui, sans-serif; }
+
+      /* Animated number entrance */
+      @keyframes point-pop {
+        0%   { transform: scale(0.85); opacity: 0; }
+        55%  { transform: scale(1.05); opacity: 1; }
+        100% { transform: scale(1);    opacity: 1; }
+      }
+      .point-pop { animation: point-pop 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+      /* Progress bar fill */
+      .prog-fill { transition: width 1s cubic-bezier(0.22,1,0.36,1); }
+
+      /* Nav active indicator */
+      .nav-indicator { height: 2px; width: 28px; border-radius: 2px; }
+
+      /* Select arrow */
+      select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23737373' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px !important;
+      }
+
+      /* Toast */
+      #toast {
+        position: fixed; bottom: 80px; left: 4px; right: 4px;
+        z-index: 100; margin: 0 auto; max-width: 380px;
+        border-radius: 14px; padding: 12px 16px;
+        font-size: 13px; font-weight: 500; text-align: center;
+        transform: translateY(80px); opacity: 0;
+        transition: transform 0.25s, opacity 0.25s;
+      }
+      #toast.show { transform: translateY(0); opacity: 1; }
+      #toast.success { background: rgba(22,163,74,0.15); border: 1px solid rgba(22,163,74,0.3); color: #86efac; }
+      #toast.error   { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
+      #toast.info    { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); color: #93c5fd; }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 3px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #262626; border-radius: 3px; }
+
+      /* Fade-up entrance */
+      @keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+      .fade-up { animation: fadeUp 0.35s ease both; }
+      .d1{animation-delay:.04s}.d2{animation-delay:.08s}.d3{animation-delay:.12s}.d4{animation-delay:.16s}.d5{animation-delay:.2s}
+    </style>
+  </head>
+  <body class="relative min-h-screen bg-[#0c0a09] text-neutral-100 antialiased" id="bd">
+
+    <!-- Phone frame -->
+    <div class="relative z-10 mx-auto flex min-h-screen max-w-[420px] items-start justify-center px-3 py-6 md:items-center md:py-10">
+      <div class="flex w-full max-w-[390px] flex-col overflow-hidden rounded-[2.75rem] border-[12px] border-neutral-800 bg-neutral-900 shadow-2xl shadow-black/70 ring-1 ring-white/[0.06]">
+
+        <!-- Notch -->
+        <div class="flex justify-center bg-neutral-950 pb-1 pt-3">
+          <div class="h-5 w-24 rounded-full bg-neutral-800" aria-hidden="true"></div>
+        </div>
+
+        <!-- Screen -->
+        <div class="flex max-h-[min(812px,calc(100dvh-5rem))] min-h-[640px] flex-1 flex-col bg-neutral-950">
+
+          <!-- Top bar inside screen -->
+          <div class="shrink-0 border-b border-neutral-800 bg-neutral-950 px-4 py-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Painel Comercial</p>
+                <p class="text-sm font-semibold text-neutral-100" id="topbar-nome">—</p>
+              </div>
+              <span id="topbar-nivel"
+                class="inline-flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-800/80 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-neutral-400">
+                — Iniciante
+              </span>
+            </div>
+          </div>
+
+          <!-- Scrollable content area -->
+          <main class="min-h-0 flex-1 overflow-y-auto px-4 pb-2" id="main-area">
+
+            <!-- VIEW: PAINEL -->
+            <div id="view-painel">
+
+              <div class="pt-4 pb-2">
+                <p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Visão geral</p>
+                <h1 class="text-2xl font-semibold text-neutral-100" id="greeting-title">Painel</h1>
+              </div>
+
+              <!-- Hero: kg total -->
+              <section class="fade-up relative overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-lg shadow-[#facc15]/5">
+                <div class="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-[#facc15]/10 to-transparent blur-2xl"></div>
+                <p class="text-xs font-medium text-neutral-400">Resíduos tratados</p>
+                <p class="mt-1 bg-gradient-to-r from-[#facc15] to-orange-400 bg-clip-text text-5xl font-bold tabular-nums text-transparent leading-none" id="hero-kg">0</p>
+                <p class="mt-1 text-xs text-neutral-500">kg registrados</p>
+                <!-- Progress to next level -->
+                <div class="mt-4" id="level-progress"></div>
+                <!-- Sub stats -->
+                <div class="mt-4 flex items-center gap-3 border-t border-neutral-800 pt-4">
+                  <div class="flex-1">
+                    <p class="text-xs text-neutral-500">Registros</p>
+                    <p class="text-xl font-semibold tabular-nums text-neutral-100" id="hero-registros">0</p>
+                  </div>
+                  <div class="h-8 w-px bg-neutral-800"></div>
+                  <div class="flex-1">
+                    <p class="text-xs text-neutral-500">Hoje</p>
+                    <p class="text-xl font-semibold tabular-nums text-neutral-100" id="hero-hoje">0 kg</p>
+                  </div>
+                  <div class="h-8 w-px bg-neutral-800"></div>
+                  <div class="flex-1">
+                    <p class="text-xs text-neutral-500">Ranking</p>
+                    <p class="text-xl font-semibold tabular-nums text-[#3b82f6]" id="hero-rank">#—</p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- CTA: Registrar -->
+              <button onclick="showView('registrar')"
+                class="fade-up d1 mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#facc15] py-3.5 text-sm font-semibold text-black shadow-lg shadow-[#facc15]/20 transition-all duration-200 hover:scale-105 hover:bg-yellow-300 active:scale-100">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="h-4 w-4"><path d="M12 5v14M5 12h14"/></svg>
+                Registrar Descarte
+              </button>
+
+              <!-- Selo -->
+              <div class="fade-up d2" id="seal-wrap"></div>
+
+              <!-- Stats grid -->
+              <div class="fade-up d3 mt-3 grid grid-cols-2 gap-2">
+                <div class="rounded-2xl border border-neutral-800 bg-neutral-900/50 p-4">
+                  <p class="text-xs text-neutral-500">Esta semana</p>
+                  <p class="mt-1 text-xl font-semibold tabular-nums text-neutral-100" id="stat-semana">0 kg</p>
+                  <p class="mt-1 text-xs text-neutral-500" id="stat-semana-sub">—</p>
+                </div>
+                <div class="rounded-2xl border border-neutral-800 bg-neutral-900/50 p-4">
+                  <p class="text-xs text-neutral-500">Pontos acumulados</p>
+                  <p class="mt-1 text-xl font-semibold tabular-nums text-[#facc15]" id="stat-pontos">0</p>
+                  <p class="mt-1 text-xs text-neutral-500">pts totais</p>
+                </div>
+              </div>
+
+              <!-- Recent activity -->
+              <div class="fade-up d4 mt-3">
+                <div class="mb-2 flex items-center justify-between">
+                  <h2 class="text-sm font-semibold text-neutral-200">Últimos registros</h2>
+                  <button onclick="showView('historico')" class="text-xs font-medium text-[#3b82f6] transition-colors hover:text-blue-400">Ver tudo</button>
+                </div>
+                <div class="rounded-2xl border border-neutral-800 bg-neutral-900 p-4" id="recent-list">
+                  <p class="text-sm text-neutral-500">Nenhum registro ainda.</p>
+                </div>
+              </div>
+
+            </div><!-- /view-painel -->
+
+            <!-- VIEW: REGISTRAR -->
+            <div id="view-registrar" style="display:none;">
+              <div class="pt-4 pb-2">
+                <p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Nova ação</p>
+                <h1 class="text-2xl font-semibold text-neutral-100">Registrar Descarte</h1>
+                <p class="mt-1 text-sm text-neutral-400">Cada kg registrado conta para o seu impacto.</p>
+              </div>
+
+              <section class="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-lg">
+                <div class="space-y-4">
+                  <div>
+                    <label class="text-sm font-medium text-neutral-300">Tipo de resíduo</label>
+                    <select id="reg-tipo" onchange="updatePreview()"
+                      class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40">
+                      <option value="" disabled selected>Selecione o tipo</option>
+                      <option value="organico">Orgânico / Compostável</option>
+                      <option value="plastico">Plástico</option>
+                      <option value="papel">Papel / Papelão</option>
+                      <option value="vidro">Vidro</option>
+                      <option value="metal">Metal / Alumínio</option>
+                      <option value="outro">Outros</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium text-neutral-300">Quantidade (kg)</label>
+                    <input id="reg-kg" type="number" min="0.1" step="0.1" placeholder="Ex.: 2.5"
+                      oninput="updatePreview()"
+                      class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40" />
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium text-neutral-300">Observação <span class="font-normal text-neutral-500">(opcional)</span></label>
+                    <input id="reg-obs" type="text" placeholder="Ex.: coleta do almoço"
+                      class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40" />
+                  </div>
+                </div>
+
+                <!-- Impact preview -->
+                <div id="impact-preview" class="mt-4 hidden rounded-xl border border-neutral-700 bg-neutral-800/60 p-4">
+                  <p class="mb-3 text-xs font-medium uppercase tracking-wider text-neutral-500">Impacto estimado</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <p class="text-2xl font-bold tabular-nums text-[#facc15]" id="preview-pts">—</p>
+                      <p class="mt-0.5 text-xs text-neutral-500">pontos</p>
+                    </div>
+                    <div>
+                      <p class="text-2xl font-bold tabular-nums text-neutral-100" id="preview-co2">—</p>
+                      <p class="mt-0.5 text-xs text-neutral-500">kg CO₂ evitado</p>
+                    </div>
+                  </div>
+                </div>
+
+                <button onclick="doRegister()"
+                  class="mt-5 w-full rounded-2xl bg-[#facc15] py-3 text-sm font-semibold text-black shadow-lg shadow-[#facc15]/20 transition-all duration-200 hover:scale-105 hover:bg-yellow-300 active:scale-100">
+                  Confirmar Registro
+                </button>
+                <button onclick="showView('painel')"
+                  class="mt-2 w-full rounded-2xl py-3 text-sm font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300">
+                  Cancelar
+                </button>
+              </section>
+            </div><!-- /view-registrar -->
+
+            <!-- VIEW: HISTORICO -->
+            <div id="view-historico" style="display:none;">
+              <div class="pt-4 pb-2">
+                <p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Atividade</p>
+                <h1 class="text-2xl font-semibold text-neutral-100">Histórico</h1>
+              </div>
+              <!-- Filter tabs -->
+              <div class="mb-4 flex gap-2 flex-wrap">
+                <button class="hist-tab rounded-full border border-[#facc15]/50 bg-[#facc15]/10 px-3 py-1.5 text-xs font-medium text-[#facc15]" data-f="tudo" onclick="filterHist('tudo',this)">Todos</button>
+                <button class="hist-tab rounded-full border border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-400" data-f="organico" onclick="filterHist('organico',this)">Orgânico</button>
+                <button class="hist-tab rounded-full border border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-400" data-f="plastico" onclick="filterHist('plastico',this)">Plástico</button>
+                <button class="hist-tab rounded-full border border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-400" data-f="papel" onclick="filterHist('papel',this)">Papel</button>
+              </div>
+              <div id="hist-full" class="space-y-2"></div>
+            </div><!-- /view-historico -->
+
+            <!-- VIEW: NEGOCIO (Perfil) -->
+            <div id="view-negocio" style="display:none;">
+              <div class="pt-4 pb-2">
+                <p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Sua conta</p>
+                <h1 class="text-2xl font-semibold text-neutral-100">Negócio</h1>
+              </div>
+
+              <!-- Info card -->
+              <section class="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-lg">
+                <div class="flex items-center gap-4 border-b border-neutral-800 pb-4">
+                  <div id="prof-avatar"
+                    class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-neutral-700 bg-gradient-to-br from-neutral-800 to-neutral-900 text-xl font-semibold text-[#facc15] shadow-lg shadow-[#facc15]/10">
+                    —
+                  </div>
+                  <div>
+                    <p class="text-base font-semibold text-neutral-100" id="prof-nome">—</p>
+                    <p class="text-xs text-neutral-500" id="prof-tipo">—</p>
+                  </div>
+                </div>
+
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                  <div class="rounded-xl border border-neutral-800 bg-neutral-950/50 p-3">
+                    <p class="text-xs text-neutral-500">Responsável</p>
+                    <p class="mt-1 text-sm font-medium text-neutral-100" id="prof-responsavel">—</p>
+                  </div>
+                  <div class="rounded-xl border border-neutral-800 bg-neutral-950/50 p-3">
+                    <p class="text-xs text-neutral-500">Membro desde</p>
+                    <p class="mt-1 text-sm font-medium text-[#facc15]" id="prof-desde">—</p>
+                  </div>
+                  <div class="rounded-xl border border-neutral-800 bg-neutral-950/50 p-3">
+                    <p class="text-xs text-neutral-500">Total kg</p>
+                    <p class="mt-1 text-sm font-semibold tabular-nums text-neutral-100" id="prof-kg">0 kg</p>
+                  </div>
+                  <div class="rounded-xl border border-neutral-800 bg-neutral-950/50 p-3">
+                    <p class="text-xs text-neutral-500">Pontos</p>
+                    <p class="mt-1 text-sm font-semibold tabular-nums text-[#facc15]" id="prof-pontos">0</p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Seal in profile -->
+              <div class="mt-3" id="prof-seal"></div>
+
+              <!-- Benefits -->
+              <div class="mt-3">
+                <h2 class="mb-2 text-sm font-semibold text-neutral-200">Benefícios</h2>
+                <div class="grid grid-cols-2 gap-2" id="prof-benefits"></div>
+              </div>
+
+              <!-- Logout -->
+              <button onclick="doLogout()"
+                class="mt-5 w-full rounded-2xl py-3 text-sm font-medium text-neutral-500 transition-all duration-200 hover:text-[#ef4444]">
+                Sair do painel
+              </button>
+            </div><!-- /view-negocio -->
+
+          </main><!-- /main-area -->
+
+          <!-- Bottom nav -->
+          <nav class="shrink-0 border-t border-neutral-800 bg-neutral-900/98 px-1 pb-3 pt-2 backdrop-blur-md" aria-label="Principal">
+            <div class="flex justify-around">
+              <button id="nav-painel" onclick="showView('painel')"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-[#facc15] transition-all duration-200">
+                <span class="nav-indicator bg-[#facc15]"></span>
+                Painel
+              </button>
+              <button id="nav-registrar" onclick="showView('registrar')"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300">
+                <span class="nav-indicator bg-transparent"></span>
+                Registrar
+              </button>
+              <button id="nav-historico" onclick="showView('historico')"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300">
+                <span class="nav-indicator bg-transparent"></span>
+                Histórico
+              </button>
+              <button id="nav-negocio" onclick="showView('negocio')"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300">
+                <span class="nav-indicator bg-transparent"></span>
+                Negócio
+              </button>
+            </div>
+          </nav>
+
+        </div><!-- /screen -->
+      </div><!-- /phone frame -->
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+    (function(){
+      'use strict';
+
+      /* ── storage ── */
+      function sp(j,f){try{return JSON.parse(j);}catch{return f;}}
+      function getMs(){return sp(localStorage.getItem('arraia_merchants'),[]);}
+      function saveMs(ms){localStorage.setItem('arraia_merchants',JSON.stringify(ms));}
+      function getM(email){return getMs().find(function(m){return m.email===email;})||null;}
+      function upsertM(m){var ms=getMs();var i=ms.findIndex(function(x){return x.email===m.email;});if(i>=0)ms[i]=m;else ms.push(m);saveMs(ms);}
+      function getHist(email){var all=sp(localStorage.getItem('arraia_m_history'),{});return Array.isArray(all[email])?all[email]:[];}
+      function addHist(email,entry){var all=sp(localStorage.getItem('arraia_m_history'),{});if(!Array.isArray(all[email]))all[email]=[];all[email].unshift(entry);localStorage.setItem('arraia_m_history',JSON.stringify(all));}
+
+      /* ── auth guard ── */
+      var email=localStorage.getItem('arraia_m_session');
+      if(!email||!getM(email)){window.location.href='merchant-login.html';return;}
+      var merchant=getM(email);
+
+      /* ── helpers ── */
+      function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+      function toast(msg,type){var el=document.getElementById('toast');el.textContent=msg;el.className=(type||'info')+' show';clearTimeout(el._t);el._t=setTimeout(function(){el.className='';},3200);}
+      function animNum(el,to,sfx,dur){if(!el)return;var t0=performance.now();(function f(now){var p=Math.min(1,(now-t0)/dur);var e=1-(1-p)**3;el.textContent=Math.round(to*e)+(sfx||'');if(p<1)requestAnimationFrame(f);})(t0);}
+      function dateOnly(iso){return new Date(iso).toISOString().slice(0,10);}
+      function fmtDate(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
+      function hoursAgo(iso){var d=(Date.now()-new Date(iso))/3600000;if(d<1)return'agora mesmo';if(d<24)return Math.round(d)+'h atrás';var dd=Math.round(d/24);return dd===1?'ontem':dd+'d atrás';}
+
+      var TYPE_LABELS={organico:'Orgânico/Compostável',plastico:'Plástico',papel:'Papel/Papelão',vidro:'Vidro',metal:'Metal/Alumínio',outro:'Outros'};
+      var TYPE_CO2={organico:0.3,plastico:1.5,papel:0.8,vidro:0.3,metal:2.0,outro:0.5};
+      var TYPE_PTS={organico:15,plastico:20,papel:10,vidro:12,metal:25,outro:8};
+
+      /* ── levels ── */
+      var LEVELS=[
+        {name:'Iniciante',min:0,max:10,color:'text-neutral-400'},
+        {name:'Bronze',min:10,max:50,color:'text-orange-400'},
+        {name:'Prata',min:50,max:150,color:'text-neutral-300'},
+        {name:'Ouro',min:150,max:400,color:'text-[#facc15]'},
+        {name:'Elite',min:400,max:999999,color:'text-[#facc15]'},
+      ];
+      function getLevel(kg){return LEVELS.find(function(l){return kg>=l.min&&kg<l.max;})||LEVELS[LEVELS.length-1];}
+
+      /* ── streaks ── */
+      function getStreak(hist){
+        if(!hist.length)return 0;
+        var days=[...new Set(hist.map(function(h){return dateOnly(h.data);}))].sort(function(a,b){return b.localeCompare(a);});
+        var today=dateOnly(new Date().toISOString());
+        if(days[0]!==today)return 0;
+        var s=1;
+        for(var i=1;i<days.length;i++){var diff=(new Date(days[i-1]+'T12:00:00')-new Date(days[i]+'T12:00:00'))/86400000;if(diff===1)s++;else break;}
+        return s;
+      }
+      function getTodayKg(hist){var t=dateOnly(new Date().toISOString());return hist.filter(function(h){return dateOnly(h.data)===t;}).reduce(function(s,h){return s+h.kg;},0);}
+      function getWeekKg(hist){var ago=new Date(Date.now()-7*86400000);return hist.filter(function(h){return new Date(h.data)>=ago;}).reduce(function(s,h){return s+h.kg;},0);}
+
+      /* ── render painel ── */
+      function renderPainel(){
+        merchant=getM(email);
+        var hist=getHist(email);
+        var kg=merchant.kg_total||0;
+        var level=getLevel(kg);
+        var hoje=getTodayKg(hist);
+        var semana=getWeekKg(hist);
+        var streak=getStreak(hist);
+
+        /* topbar */
+        document.getElementById('topbar-nome').textContent=merchant.nome||email;
+        document.getElementById('topbar-nivel').textContent=level.name;
+
+        /* greeting */
+        var h=new Date().getHours();
+        var g=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+        document.getElementById('greeting-title').textContent=g+', '+esc((merchant.responsavel||merchant.nome||'comerciante').split(' ')[0]);
+
+        /* hero */
+        animNum(document.getElementById('hero-kg'),kg,' kg',1000);
+        animNum(document.getElementById('hero-registros'),hist.length,'',700);
+
+        var hojeEl=document.getElementById('hero-hoje');
+        if(hojeEl)hojeEl.textContent=hoje.toFixed(1)+' kg';
+
+        /* rank */
+        var allMs=getMs().slice().sort(function(a,b){return(b.kg_total||0)-(a.kg_total||0);});
+        var rank=allMs.findIndex(function(m){return m.email===email;})+1;
+        document.getElementById('hero-rank').textContent='#'+rank;
+
+        /* level progress */
+        var prog=document.getElementById('level-progress');
+        if(level.max<999999){
+          var pct=Math.min(100,Math.round(((kg-level.min)/(level.max-level.min))*100));
+          var nextLevel=LEVELS[LEVELS.indexOf(level)+1];
+          prog.innerHTML='<div class="mb-2 flex items-center justify-between text-xs text-neutral-400"><span>Meta '+level.name+' → '+(nextLevel?nextLevel.name:'')+'</span><span class="font-semibold text-neutral-200">'+pct+'%</span></div><div class="h-1.5 w-full overflow-hidden rounded-full bg-neutral-800"><div id="prog-fill" class="prog-fill h-full rounded-full bg-gradient-to-r from-[#facc15] to-orange-400 shadow-lg shadow-[#facc15]/20" style="width:0%"></div></div><p class="mt-2 text-xs text-neutral-500">Faltam '+Math.max(0,(level.max-kg)).toFixed(1)+' kg para '+level.max+'kg</p>';
+          setTimeout(function(){var f=document.getElementById('prog-fill');if(f)f.style.width=pct+'%';},80);
+        } else {
+          prog.innerHTML='<p class="text-xs font-medium text-[#facc15]">Nível Elite — topo do ecossistema</p>';
+        }
+
+        /* seal */
+        var sealEl=document.getElementById('seal-wrap');
+        if(kg>=10){
+          sealEl.innerHTML='<div class="mt-3 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 shadow-lg"><div class="flex items-center justify-between"><div><p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Certificado</p><p class="text-sm font-semibold text-neutral-100">Estabelecimento Sustentável</p><p class="mt-1 text-xs text-neutral-500">Descarte responsável · Arraiá 2025</p></div><div class="ml-3 shrink-0 rounded-xl border border-[#facc15]/30 bg-[#facc15]/10 px-3 py-2 text-center"><p class="text-[10px] font-medium uppercase tracking-wider text-[#facc15]/70">Selo</p><p class="text-sm font-bold text-[#facc15]">Ativo</p></div></div></div>';
+        } else {
+          var need=(10-kg).toFixed(1);
+          sealEl.innerHTML='<div class="mt-3 rounded-2xl border border-neutral-800 bg-neutral-900/50 p-4"><div class="flex items-center justify-between"><div><p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Certificado</p><p class="text-sm font-semibold text-neutral-400">Selo Sustentável</p><p class="mt-1 text-xs text-neutral-500">Registre mais '+need+' kg para desbloquear</p></div><div class="ml-3 shrink-0 rounded-xl border border-neutral-700 bg-neutral-800/60 px-3 py-2 text-center"><p class="text-[10px] font-medium uppercase tracking-wider text-neutral-600">Selo</p><p class="text-sm font-bold text-neutral-600">Bloq.</p></div></div></div>';
+        }
+
+        /* stat cards */
+        document.getElementById('stat-semana').textContent=semana.toFixed(1)+' kg';
+        document.getElementById('stat-semana-sub').textContent=streak>0?'Streak: '+streak+' dia'+(streak>1?'s':''):'Sem registros recentes';
+        animNum(document.getElementById('stat-pontos'),merchant.pontos||0,'',700);
+
+        /* recent */
+        var recentEl=document.getElementById('recent-list');
+        var slice=hist.slice(0,4);
+        if(!slice.length){
+          recentEl.innerHTML='<p class="text-sm text-neutral-500">Nenhum registro. Use "Registrar Descarte".</p>';
+        } else {
+          recentEl.innerHTML=slice.map(function(h){
+            return '<div class="flex items-center justify-between border-b border-neutral-800 py-2.5 last:border-0"><div class="min-w-0 flex-1"><p class="truncate text-sm font-medium text-neutral-100">'+esc(TYPE_LABELS[h.tipo]||h.tipo)+'</p><p class="text-xs text-neutral-500">'+hoursAgo(h.data)+(h.obs?' · '+esc(h.obs):'')+'</p></div><span class="ml-3 shrink-0 text-sm font-semibold text-[#facc15]">+'+h.kg.toFixed(1)+' kg</span></div>';
+          }).join('');
+        }
+      }
+
+      /* ── render historico ── */
+      var histFilter='tudo';
+      function renderHist(){
+        var hist=getHist(email);
+        var filtered=histFilter==='tudo'?hist:hist.filter(function(h){return h.tipo===histFilter;});
+        var el=document.getElementById('hist-full');
+        if(!filtered.length){el.innerHTML='<p class="py-8 text-center text-sm text-neutral-500">Nenhum registro nesta categoria.</p>';return;}
+        var byDay={};
+        filtered.forEach(function(h){var d=dateOnly(h.data);if(!byDay[d])byDay[d]=[];byDay[d].push(h);});
+        var days=Object.keys(byDay).sort(function(a,b){return b.localeCompare(a);});
+        var today=dateOnly(new Date().toISOString());
+        el.innerHTML=days.map(function(day){
+          var items=byDay[day];
+          var dayKg=items.reduce(function(s,h){return s+h.kg;},0);
+          var label=day===today?'Hoje':new Date(day+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+          return '<div class="mb-4"><div class="mb-2 flex justify-between"><span class="text-xs font-medium uppercase tracking-wider text-neutral-500">'+label+'</span><span class="text-xs font-semibold text-[#facc15]">'+dayKg.toFixed(1)+' kg</span></div>'+items.map(function(h){return'<article class="mb-2 rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4 shadow-lg"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><p class="text-sm font-medium text-neutral-100">'+esc(TYPE_LABELS[h.tipo]||h.tipo)+'</p><p class="mt-1 text-xs text-neutral-500">'+fmtDate(h.data)+(h.obs?' · '+esc(h.obs):'')+'</p></div><div class="shrink-0 text-right"><span class="block rounded-lg bg-[#facc15]/10 px-2 py-0.5 text-xs font-semibold text-[#facc15]">+'+h.kg.toFixed(1)+' kg</span><span class="mt-1 block text-[10px] text-neutral-500">'+h.pts+' pts</span></div></div></article>';}).join('')+'</div>';
+        }).join('');
+      }
+      window.filterHist=function(f,btn){
+        histFilter=f;
+        document.querySelectorAll('.hist-tab').forEach(function(t){
+          if(t.dataset.f===f){t.className='hist-tab rounded-full border border-[#facc15]/50 bg-[#facc15]/10 px-3 py-1.5 text-xs font-medium text-[#facc15]';}
+          else{t.className='hist-tab rounded-full border border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-400';}
+        });
+        renderHist();
+      };
+
+      /* ── render negocio ── */
+      function renderNegocio(){
+        merchant=getM(email);
+        var kg=merchant.kg_total||0;
+        var initial=(merchant.responsavel||merchant.nome||'N').charAt(0).toUpperCase();
+        document.getElementById('prof-avatar').textContent=initial;
+        document.getElementById('prof-nome').textContent=merchant.nome||'—';
+        var tipos={alimentacao:'Alimentação',artesanato:'Artesanato',bebidas:'Bebidas',servicos:'Serviços',outro:'Outro'};
+        document.getElementById('prof-tipo').textContent=tipos[merchant.tipo]||merchant.tipo||'—';
+        document.getElementById('prof-responsavel').textContent=merchant.responsavel||'—';
+        var d=new Date(merchant.createdAt||Date.now());
+        document.getElementById('prof-desde').textContent=d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+        document.getElementById('prof-kg').textContent=kg.toFixed(1)+' kg';
+        document.getElementById('prof-pontos').textContent=String(merchant.pontos||0);
+
+        /* seal */
+        var sealEl=document.getElementById('prof-seal');
+        sealEl.innerHTML=kg>=10?
+          '<div class="rounded-2xl border border-neutral-800 bg-neutral-900 p-4"><div class="flex items-center justify-between"><div><p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Certificado ativo</p><p class="text-sm font-semibold text-neutral-100">Estabelecimento Sustentável</p></div><div class="ml-3 shrink-0 rounded-xl border border-[#facc15]/30 bg-[#facc15]/10 px-3 py-2"><p class="text-xs font-bold text-[#facc15]">Ativo</p></div></div></div>':
+          '<div class="rounded-2xl border border-neutral-800 bg-neutral-900/50 p-4"><p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Selo Sustentável</p><p class="mt-1 text-sm text-neutral-400">Desbloqueie ao registrar 10 kg. Faltam '+(10-kg).toFixed(1)+' kg.</p></div>';
+
+        /* benefits */
+        var benefits=[
+          {name:'Destaque no mapa',desc:kg>=5?'Ativo':'Requer 5 kg',active:kg>=5},
+          {name:'Selo sustentável',desc:kg>=10?'Ativo':'Requer 10 kg',active:kg>=10},
+          {name:'Painel de impacto',desc:'Ativo',active:true},
+          {name:'Ranking público',desc:'Ativo',active:true},
+        ];
+        document.getElementById('prof-benefits').innerHTML=benefits.map(function(b){
+          return '<div class="rounded-2xl border '+(b.active?'border-[#facc15]/20 bg-[#facc15]/5':'border-neutral-800 bg-neutral-900/50')+' p-3"><p class="text-sm font-medium '+(b.active?'text-neutral-100':'text-neutral-500')+'">'+b.name+'</p><p class="mt-0.5 text-xs '+(b.active?'text-[#facc15]':'text-neutral-600')+'">'+b.desc+'</p></div>';
+        }).join('');
+      }
+
+      /* ── register descarte ── */
+      window.updatePreview=function(){
+        var tipo=document.getElementById('reg-tipo').value;
+        var kg=parseFloat(document.getElementById('reg-kg').value)||0;
+        var prev=document.getElementById('impact-preview');
+        if(tipo&&kg>0){
+          var co2=((TYPE_CO2[tipo]||0.5)*kg).toFixed(2);
+          var pts=(TYPE_PTS[tipo]||8)*Math.ceil(kg);
+          document.getElementById('preview-pts').textContent=pts;
+          document.getElementById('preview-co2').textContent=co2;
+          prev.classList.remove('hidden');
+        } else { prev.classList.add('hidden'); }
+      };
+
+      window.doRegister=function(){
+        var tipo=document.getElementById('reg-tipo').value;
+        var kg=parseFloat(document.getElementById('reg-kg').value);
+        var obs=document.getElementById('reg-obs').value.trim();
+        if(!tipo){toast('Selecione o tipo de resíduo.','error');return;}
+        if(!kg||kg<=0){toast('Informe a quantidade em kg.','error');return;}
+        var pts=(TYPE_PTS[tipo]||8)*Math.ceil(kg);
+        addHist(email,{data:new Date().toISOString(),tipo:tipo,tipoLabel:TYPE_LABELS[tipo]||tipo,kg:kg,pts:pts,obs:obs});
+        merchant=getM(email);
+        merchant.kg_total=(merchant.kg_total||0)+kg;
+        merchant.pontos=(merchant.pontos||0)+pts;
+        merchant.registros=(merchant.registros||0)+1;
+        upsertM(merchant);
+        document.getElementById('reg-tipo').value='';
+        document.getElementById('reg-kg').value='';
+        document.getElementById('reg-obs').value='';
+        document.getElementById('impact-preview').classList.add('hidden');
+        toast('+'+kg.toFixed(1)+' kg registrado · +'+pts+' pontos','success');
+        setTimeout(function(){showView('painel');},1100);
+      };
+
+      /* ── navigation ── */
+      var VIEWS=['painel','registrar','historico','negocio'];
+      window.showView=function(v){
+        VIEWS.forEach(function(x){
+          var el=document.getElementById('view-'+x);
+          if(el)el.style.display=x===v?'':'none';
+          var nav=document.getElementById('nav-'+x);
+          if(nav){
+            nav.className='flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium transition-all duration-200 '+(x===v?'text-[#facc15]':'text-neutral-500 hover:text-neutral-300');
+            nav.querySelector('.nav-indicator').style.background=x===v?'#facc15':'transparent';
+          }
+        });
+        document.getElementById('main-area').scrollTop=0;
+        if(v==='painel')renderPainel();
+        if(v==='historico')renderHist();
+        if(v==='negocio')renderNegocio();
+      };
+
+      window.doLogout=function(){
+        localStorage.removeItem('arraia_m_session');
+        window.location.href='merchant-login.html';
+      };
+
+      /* ── init ── */
+      renderPainel();
+    })();
+    </script>
+  </body>
+</html>

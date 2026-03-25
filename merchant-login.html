@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>Acesso Comercial — Arraiá Sustentável</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } },
+      };
+    </script>
+    <style>
+      html { font-family: Inter, system-ui, sans-serif; }
+      .bandeira {
+        width: 0; height: 0;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-bottom: 14px solid var(--c);
+        filter: drop-shadow(0 1px 1px rgba(0,0,0,0.4));
+      }
+      @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(0.8);} }
+      .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+      #toast {
+        position:fixed; bottom:24px; left:50%;
+        transform:translateX(-50%) translateY(80px);
+        background:#171717; border:1px solid rgba(255,255,255,0.08);
+        color:#f5f5f5; padding:12px 20px; border-radius:12px;
+        font-size:13px; z-index:999; transition:transform 0.3s,opacity 0.3s; opacity:0; white-space:nowrap;
+      }
+      #toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+      #toast.err{border-color:rgba(239,68,68,0.3);background:#1c0a0a;}
+    </style>
+  </head>
+  <body class="relative min-h-screen bg-[#0c0a09] text-neutral-100 antialiased">
+
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <div class="absolute left-0 right-0 top-0 flex justify-center gap-1.5 py-4 opacity-[0.92]" aria-hidden="true">
+        <span class="bandeira" style="--c:#ef4444"></span>
+        <span class="bandeira" style="--c:#facc15"></span>
+        <span class="bandeira" style="--c:#3b82f6"></span>
+        <span class="bandeira" style="--c:#22c55e"></span>
+        <span class="bandeira" style="--c:#ef4444"></span>
+        <span class="bandeira" style="--c:#facc15"></span>
+      </div>
+      <svg class="absolute bottom-8 left-2 h-24 w-16 text-emerald-800/45" viewBox="0 0 80 120" fill="currentColor" aria-hidden="true">
+        <ellipse cx="40" cy="110" rx="28" ry="8" class="text-emerald-900/40"/>
+        <rect x="34" y="60" width="12" height="52" rx="4"/>
+        <ellipse cx="40" cy="58" rx="18" ry="22"/>
+        <ellipse cx="22" cy="48" rx="10" ry="14"/>
+        <ellipse cx="58" cy="42" rx="11" ry="16"/>
+      </svg>
+    </div>
+
+    <div class="relative z-10 mx-auto flex min-h-screen max-w-[420px] items-center justify-center px-3 py-8">
+      <div class="flex w-full max-w-[390px] flex-col overflow-hidden rounded-[2.75rem] border-[12px] border-neutral-800 bg-neutral-900 shadow-2xl shadow-black/70 ring-1 ring-white/[0.06]">
+        <div class="flex justify-center bg-neutral-950 pb-1 pt-3">
+          <div class="h-5 w-24 rounded-full bg-neutral-800" aria-hidden="true"></div>
+        </div>
+
+        <div class="flex min-h-[520px] flex-col bg-neutral-950 px-5 pb-8 pt-6">
+
+          <div class="flex justify-center mb-4">
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-800/80 px-3 py-1 text-[11px] font-medium uppercase tracking-widest text-neutral-400">
+              <span class="h-1.5 w-1.5 rounded-full bg-[#facc15] pulse-dot"></span>
+              Acesso Comercial
+            </span>
+          </div>
+
+          <p class="text-center text-xs font-medium uppercase tracking-wider text-[#facc15]/80">São João sustentável</p>
+          <h1 class="mt-2 text-center text-2xl font-semibold text-neutral-100">Arraiá Sustentável</h1>
+          <p class="mt-1 text-center text-sm text-neutral-400">Painel do comerciante</p>
+
+          <!-- Stats strip -->
+          <div class="mt-5 grid grid-cols-3 divide-x divide-neutral-800 overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900">
+            <div class="px-3 py-3 text-center">
+              <p class="text-base font-semibold tabular-nums text-neutral-100">2,4t</p>
+              <p class="mt-0.5 text-[10px] uppercase tracking-wider text-neutral-500">Resíduos</p>
+            </div>
+            <div class="px-3 py-3 text-center">
+              <p class="text-base font-semibold tabular-nums text-neutral-100">38</p>
+              <p class="mt-0.5 text-[10px] uppercase tracking-wider text-neutral-500">Comerciantes</p>
+            </div>
+            <div class="px-3 py-3 text-center">
+              <p class="text-base font-semibold tabular-nums text-neutral-100">1,2k</p>
+              <p class="mt-0.5 text-[10px] uppercase tracking-wider text-neutral-500">Participantes</p>
+            </div>
+          </div>
+
+          <form id="form-login" class="mt-6 space-y-4">
+            <div>
+              <label for="email" class="text-sm font-medium text-neutral-300">E-mail do negócio</label>
+              <input id="email" name="email" type="email" required autocomplete="email"
+                placeholder="contato@seunegocio.com"
+                class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40" />
+            </div>
+            <div>
+              <label for="password" class="text-sm font-medium text-neutral-300">Senha</label>
+              <input id="password" name="password" type="password" required autocomplete="current-password"
+                placeholder="••••••••"
+                class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40" />
+            </div>
+            <button type="submit"
+              class="w-full rounded-2xl bg-[#facc15] py-3 text-sm font-semibold text-black shadow-lg shadow-[#facc15]/20 transition-all duration-200 hover:scale-105 hover:bg-yellow-300 active:scale-100">
+              Acessar Painel
+            </button>
+          </form>
+
+          <p class="mt-5 text-center text-sm text-neutral-500">
+            Primeiro acesso?
+            <a href="merchant-register.html" class="font-medium text-[#3b82f6] transition-colors hover:text-blue-400">Cadastrar negócio</a>
+          </p>
+
+          <div class="my-5 flex items-center gap-3">
+            <div class="h-px flex-1 bg-neutral-800"></div>
+            <span class="text-xs text-neutral-600">ou</span>
+            <div class="h-px flex-1 bg-neutral-800"></div>
+          </div>
+
+          <a href="login.html"
+            class="flex items-center justify-between rounded-2xl border border-neutral-800 bg-neutral-900/50 px-4 py-3 text-sm font-medium text-neutral-400 transition-all duration-200 hover:border-neutral-700 hover:text-neutral-200">
+            <span>Sou participante, não comerciante</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+    <script>
+    (function(){
+      function safeParse(j,f){try{return JSON.parse(j);}catch{return f;}}
+      function getMerchants(){return safeParse(localStorage.getItem('arraia_merchants'),[]);}
+      function getMerchant(email){return getMerchants().find(function(m){return m.email===email;})||null;}
+      function toast(msg,type){var el=document.getElementById('toast');el.textContent=msg;el.className=type==='err'?'err show':'show';clearTimeout(el._t);el._t=setTimeout(function(){el.className='';},3000);}
+      var sess=localStorage.getItem('arraia_m_session');
+      if(sess&&getMerchant(sess)){window.location.href='merchant-dashboard.html';return;}
+      if(sess)localStorage.removeItem('arraia_m_session');
+      document.getElementById('form-login').addEventListener('submit',function(e){
+        e.preventDefault();
+        var email=document.getElementById('email').value.trim().toLowerCase();
+        var pass=document.getElementById('password').value;
+        if(!email||!pass){toast('Preencha todos os campos.','err');return;}
+        var m=getMerchant(email);
+        if(!m||m.password!==pass){toast('E-mail ou senha incorretos.','err');return;}
+        localStorage.setItem('arraia_m_session',email);
+        window.location.href='merchant-dashboard.html';
+      });
+    })();
+    </script>
+  </body>
+</html>

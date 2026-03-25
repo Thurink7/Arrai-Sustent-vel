@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>Cadastro Comercial — Arraiá Sustentável</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } },
+      };
+    </script>
+    <style>
+      html { font-family: Inter, system-ui, sans-serif; }
+      .bandeira {
+        width: 0; height: 0;
+        border-left: 7px solid transparent; border-right: 7px solid transparent;
+        border-bottom: 14px solid var(--c);
+        filter: drop-shadow(0 1px 1px rgba(0,0,0,0.4));
+      }
+      .step-dot { height: 3px; border-radius: 2px; transition: background 0.3s, width 0.3s; }
+      select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23737373' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px !important;
+      }
+      #toast {
+        position:fixed; bottom:24px; left:50%;
+        transform:translateX(-50%) translateY(80px);
+        background:#171717; border:1px solid rgba(255,255,255,0.08);
+        color:#f5f5f5; padding:12px 20px; border-radius:12px;
+        font-size:13px; z-index:999; transition:transform 0.3s,opacity 0.3s; opacity:0; white-space:nowrap;
+      }
+      #toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+      #toast.err{border-color:rgba(239,68,68,0.3);background:#1c0a0a;}
+    </style>
+  </head>
+  <body class="relative min-h-screen bg-[#0c0a09] text-neutral-100 antialiased">
+
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <div class="absolute left-0 right-0 top-0 flex justify-center gap-1.5 py-4 opacity-[0.92]" aria-hidden="true">
+        <span class="bandeira" style="--c:#ef4444"></span>
+        <span class="bandeira" style="--c:#facc15"></span>
+        <span class="bandeira" style="--c:#3b82f6"></span>
+        <span class="bandeira" style="--c:#22c55e"></span>
+        <span class="bandeira" style="--c:#ef4444"></span>
+        <span class="bandeira" style="--c:#facc15"></span>
+      </div>
+      <svg class="absolute bottom-8 left-2 h-24 w-16 text-emerald-800/45" viewBox="0 0 80 120" fill="currentColor" aria-hidden="true">
+        <ellipse cx="40" cy="110" rx="28" ry="8" class="text-emerald-900/40"/>
+        <rect x="34" y="60" width="12" height="52" rx="4"/>
+        <ellipse cx="40" cy="58" rx="18" ry="22"/>
+        <ellipse cx="22" cy="48" rx="10" ry="14"/>
+        <ellipse cx="58" cy="42" rx="11" ry="16"/>
+      </svg>
+    </div>
+
+    <div class="relative z-10 mx-auto flex min-h-screen max-w-[420px] items-start justify-center px-3 py-6">
+      <div class="flex w-full max-w-[390px] flex-col overflow-hidden rounded-[2.75rem] border-[12px] border-neutral-800 bg-neutral-900 shadow-2xl shadow-black/70 ring-1 ring-white/[0.06]">
+        <div class="flex justify-center bg-neutral-950 pb-1 pt-3">
+          <div class="h-5 w-24 rounded-full bg-neutral-800" aria-hidden="true"></div>
+        </div>
+
+        <div class="flex min-h-[560px] flex-col bg-neutral-950 px-5 pb-8 pt-6">
+
+          <p class="text-center text-xs font-medium uppercase tracking-wider text-[#facc15]/80">Novo cadastro</p>
+          <h1 class="mt-2 text-center text-2xl font-semibold text-neutral-100">Cadastrar negócio</h1>
+          <p class="mt-1 text-center text-sm text-neutral-400">Faça parte do ecossistema sustentável</p>
+
+          <!-- Step indicators -->
+          <div class="mt-5 flex gap-1.5" id="step-dots">
+            <div class="step-dot flex-1 bg-[#facc15]" id="dot-0"></div>
+            <div class="step-dot flex-1 bg-neutral-700" id="dot-1"></div>
+            <div class="step-dot flex-1 bg-neutral-700" id="dot-2"></div>
+          </div>
+
+          <!-- Step 0: Business info -->
+          <div id="step-0" class="mt-6">
+            <p class="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-500">1 de 3 — Identificação</p>
+            <h2 class="mb-5 text-lg font-semibold text-neutral-100">Seu negócio</h2>
+            <div class="space-y-4">
+              <div>
+                <label for="nome" class="text-sm font-medium text-neutral-300">Nome do estabelecimento</label>
+                <input id="nome" type="text" placeholder="Ex.: Barraca do Seu João"
+                  class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40" />
+              </div>
+              <div>
+                <label for="tipo" class="text-sm font-medium text-neutral-300">Tipo de negócio</label>
+                <select id="tipo"
+                  class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40">
+                  <option value="" disabled selected>Selecione</option>
+                  <option value="alimentacao">Alimentação / comida</option>
+                  <option value="artesanato">Artesanato</option>
+                  <option value="bebidas">Bebidas</option>
+                  <option value="servicos">Serviços</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+              <div>
+                <label for="responsavel" class="text-sm font-medium text-neutral-300">Responsável</label>
+                <input id="responsavel" type="text" placeholder="Nome do responsável"
+                  class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40" />
+              </div>
+            </div>
+            <button onclick="nextStep(1)"
+              class="mt-6 w-full rounded-2xl bg-[#facc15] py-3 text-sm font-semibold text-black shadow-lg shadow-[#facc15]/20 transition-all duration-200 hover:scale-105 hover:bg-yellow-300 active:scale-100">
+              Continuar
+            </button>
+          </div>
+
+          <!-- Step 1: Credentials -->
+          <div id="step-1" class="mt-6" style="display:none;">
+            <p class="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-500">2 de 3 — Acesso</p>
+            <h2 class="mb-5 text-lg font-semibold text-neutral-100">Credenciais</h2>
+            <div class="space-y-4">
+              <div>
+                <label for="email" class="text-sm font-medium text-neutral-300">E-mail do negócio</label>
+                <input id="email" type="email" autocomplete="email" placeholder="contato@seunegocio.com"
+                  class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40" />
+              </div>
+              <div>
+                <label for="password" class="text-sm font-medium text-neutral-300">Senha</label>
+                <input id="password" type="password" autocomplete="new-password" placeholder="Mínimo 4 caracteres"
+                  class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:border-[#facc15] focus:outline-none focus:ring-2 focus:ring-[#facc15]/40" />
+              </div>
+            </div>
+            <button onclick="nextStep(2)"
+              class="mt-6 w-full rounded-2xl bg-[#facc15] py-3 text-sm font-semibold text-black shadow-lg shadow-[#facc15]/20 transition-all duration-200 hover:scale-105 hover:bg-yellow-300 active:scale-100">
+              Continuar
+            </button>
+            <button onclick="nextStep(0)"
+              class="mt-2 w-full rounded-2xl py-3 text-sm font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300">
+              Voltar
+            </button>
+          </div>
+
+          <!-- Step 2: Benefits + confirm -->
+          <div id="step-2" class="mt-6" style="display:none;">
+            <p class="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-500">3 de 3 — Benefícios</p>
+            <h2 class="mb-4 text-lg font-semibold text-neutral-100">O que você ganha</h2>
+            <div class="space-y-2">
+              <div class="flex items-center gap-3 rounded-xl border border-neutral-800 bg-neutral-900/80 px-4 py-3 text-sm text-neutral-300">
+                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#facc15]"></span>
+                Selo Sustentável no perfil público
+              </div>
+              <div class="flex items-center gap-3 rounded-xl border border-neutral-800 bg-neutral-900/80 px-4 py-3 text-sm text-neutral-300">
+                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#facc15]"></span>
+                Painel de impacto ambiental em tempo real
+              </div>
+              <div class="flex items-center gap-3 rounded-xl border border-neutral-800 bg-neutral-900/80 px-4 py-3 text-sm text-neutral-300">
+                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#facc15]"></span>
+                Destaque no mapa do evento
+              </div>
+              <div class="flex items-center gap-3 rounded-xl border border-neutral-800 bg-neutral-900/80 px-4 py-3 text-sm text-neutral-300">
+                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#facc15]"></span>
+                Participação no ranking de comerciantes
+              </div>
+            </div>
+            <button onclick="doRegister()"
+              class="mt-6 w-full rounded-2xl bg-[#facc15] py-3 text-sm font-semibold text-black shadow-lg shadow-[#facc15]/20 transition-all duration-200 hover:scale-105 hover:bg-yellow-300 active:scale-100">
+              Cadastrar meu negócio
+            </button>
+            <button onclick="nextStep(1)"
+              class="mt-2 w-full rounded-2xl py-3 text-sm font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300">
+              Voltar
+            </button>
+          </div>
+
+          <p class="mt-4 text-center text-sm text-neutral-500">
+            Já tem cadastro?
+            <a href="merchant-login.html" class="font-medium text-[#3b82f6] transition-colors hover:text-blue-400">Entrar no painel</a>
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+    <script>
+    (function(){
+      function toast(msg,type){var el=document.getElementById('toast');el.textContent=msg;el.className=type==='err'?'err show':'show';clearTimeout(el._t);el._t=setTimeout(function(){el.className='';},3000);}
+      function setDots(n){
+        for(var i=0;i<3;i++){
+          var d=document.getElementById('dot-'+i);
+          d.style.background=i<n?'#16a34a':i===n?'#facc15':'#404040';
+        }
+      }
+      window.nextStep=function(n){
+        if(n===1){
+          if(!document.getElementById('nome').value.trim()){toast('Informe o nome do estabelecimento.','err');return;}
+          if(!document.getElementById('tipo').value){toast('Selecione o tipo de negócio.','err');return;}
+          if(!document.getElementById('responsavel').value.trim()){toast('Informe o responsável.','err');return;}
+        }
+        if(n===2){
+          if(!document.getElementById('email').value.trim()){toast('Informe o e-mail.','err');return;}
+          if(document.getElementById('password').value.length<4){toast('Senha com mínimo 4 caracteres.','err');return;}
+        }
+        for(var i=0;i<3;i++)document.getElementById('step-'+i).style.display=i===n?'':'none';
+        setDots(n);
+      };
+      window.doRegister=function(){
+        var nome=document.getElementById('nome').value.trim();
+        var tipo=document.getElementById('tipo').value;
+        var responsavel=document.getElementById('responsavel').value.trim();
+        var email=document.getElementById('email').value.trim().toLowerCase();
+        var password=document.getElementById('password').value;
+        var merchants=JSON.parse(localStorage.getItem('arraia_merchants')||'[]');
+        if(merchants.find(function(m){return m.email===email;})){toast('Este e-mail já está cadastrado.','err');return;}
+        merchants.push({email:email,password:password,nome:nome,tipo:tipo,responsavel:responsavel,pontos:0,kg_total:0,registros:0,createdAt:new Date().toISOString()});
+        localStorage.setItem('arraia_merchants',JSON.stringify(merchants));
+        localStorage.setItem('arraia_m_session',email);
+        toast('Cadastro realizado!');
+        setTimeout(function(){window.location.href='merchant-dashboard.html';},900);
+      };
+    })();
+    </script>
+  </body>
+</html>

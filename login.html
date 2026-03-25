@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>Entrar — Arraiá Sustentável</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } },
+      };
+    </script>
+    <style>
+      html { font-family: Inter, system-ui, sans-serif; }
+      .bandeira {
+        width: 0; height: 0;
+        border-left: 7px solid transparent; border-right: 7px solid transparent;
+        border-bottom: 14px solid var(--c);
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+      }
+      .merchant-entry {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 16px;
+        border: 1px solid rgba(34,197,94,0.2);
+        border-radius: 16px;
+        background: rgba(34,197,94,0.04);
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .merchant-entry:hover {
+        border-color: rgba(34,197,94,0.4);
+        background: rgba(34,197,94,0.08);
+      }
+    </style>
+  </head>
+  <body class="relative min-h-screen bg-[#0c0a09] text-neutral-100 antialiased">
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <div class="absolute left-0 right-0 top-0 flex justify-center gap-1.5 py-4 opacity-[0.92]" aria-hidden="true">
+      </div>
+      <svg class="absolute bottom-6 left-4 h-24 w-16 text-emerald-800/45" viewBox="0 0 80 120" fill="currentColor" aria-hidden="true">
+        <ellipse cx="40" cy="110" rx="28" ry="8" class="text-emerald-900/40" />
+        <rect x="34" y="60" width="12" height="52" rx="4" />
+        <ellipse cx="40" cy="58" rx="18" ry="22" />
+        <ellipse cx="22" cy="48" rx="10" ry="14" />
+        <ellipse cx="58" cy="42" rx="11" ry="16" />
+      </svg>
+      <svg class="absolute bottom-4 right-6 h-28 w-20 text-emerald-800/40" viewBox="0 0 90 130" fill="currentColor" aria-hidden="true">
+        <ellipse cx="45" cy="118" rx="32" ry="9" class="text-emerald-900/35" />
+        <rect x="38" y="55" width="14" height="58" rx="5" />
+        <ellipse cx="45" cy="52" rx="20" ry="26" />
+        <ellipse cx="24" cy="58" rx="12" ry="18" />
+        <ellipse cx="68" cy="50" rx="13" ry="20" />
+      </svg>
+    </div>
+
+    <div class="relative z-10 mx-auto flex min-h-screen max-w-[420px] items-center justify-center px-3 py-8">
+      <div class="flex w-full max-w-[390px] flex-col overflow-hidden rounded-[2.75rem] border-[12px] border-neutral-800 bg-neutral-900 shadow-2xl shadow-black/70 ring-1 ring-white/[0.06]">
+        <div class="flex justify-center bg-neutral-950 pb-1 pt-3">
+          <div class="h-5 w-24 rounded-full bg-neutral-800" aria-hidden="true"></div>
+        </div>
+
+        <div class="flex min-h-[520px] flex-col bg-neutral-950 px-5 pb-8 pt-6">
+          <p class="text-center text-xs font-medium uppercase tracking-wider text-[#facc15]/80">São João sustentável</p>
+          <h1 class="mt-2 text-center text-2xl font-semibold text-neutral-100">Arraiá Sustentável</h1>
+          <p class="mt-1 text-center text-sm text-neutral-400">Entre para continuar</p>
+
+          <form id="form-login" class="mt-8 space-y-5">
+            <div>
+              <label for="email" class="text-sm font-medium text-neutral-300">E-mail</label>
+              <input id="email" name="email" type="email" required autocomplete="email"
+                class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-[#facc15]/50" />
+            </div>
+            <div>
+              <label for="password" class="text-sm font-medium text-neutral-300">Senha</label>
+              <input id="password" name="password" type="password" required autocomplete="current-password"
+                class="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-[#facc15]/50" />
+            </div>
+            <button type="submit"
+              class="w-full rounded-2xl bg-[#facc15] py-3 text-sm font-semibold text-black shadow-lg shadow-[#facc15]/20 transition-all duration-200 hover:scale-105 hover:bg-yellow-300 active:scale-100">
+              Entrar
+            </button>
+          </form>
+
+          <p class="mt-5 text-center text-sm text-neutral-500">
+            Novo por aqui?
+            <a href="register.html" class="font-medium text-[#3b82f6] transition-colors hover:text-blue-400">Criar conta</a>
+          </p>
+
+          <!-- Divider -->
+          <div class="my-5 flex items-center gap-3">
+            <div class="h-px flex-1 bg-neutral-800"></div>
+            <span class="text-xs text-neutral-600">ou</span>
+            <div class="h-px flex-1 bg-neutral-800"></div>
+          </div>
+
+          <!-- Merchant entry -->
+          <a href="merchant-login.html" class="merchant-entry">
+            <div class="flex items-center gap-3">
+              <div>
+                <div style="font-size:13px;font-weight:600;color:#f0fdf4;">Sou comerciante</div>
+                <div style="font-size:11px;color:rgba(206, 241, 48, 0.5);margin-top:1px;">Acessar painel de gestão</div>
+              </div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(34,197,94,0.5)" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var USERS_KEY = 'arraia_users';
+        var SESSION_KEY = 'arraia_session';
+        function getUsers() { try { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); } catch (e) { return []; } }
+        function getUser(email) { var users = getUsers(); for (var i = 0; i < users.length; i++) { if (users[i].email === email) return users[i]; } return null; }
+        var sess = localStorage.getItem(SESSION_KEY);
+        if (sess && getUser(sess)) { window.location.href = 'index.html'; return; }
+        if (sess) localStorage.removeItem(SESSION_KEY);
+
+        document.getElementById('form-login').addEventListener('submit', function (e) {
+          e.preventDefault();
+          var email = document.getElementById('email').value.trim().toLowerCase();
+          var password = document.getElementById('password').value;
+          var user = getUser(email);
+          if (!user || user.password !== password) { alert('E-mail ou senha incorretos.'); return; }
+          localStorage.setItem(SESSION_KEY, email);
+          window.location.href = 'index.html';
+        });
+      })();
+    </script>
+  </body>
+</html>

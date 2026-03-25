@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>Perfil — Arraiá Sustentável</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } },
+      };
+    </script>
+    <style>
+      html {
+        font-family: Inter, system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body class="relative min-h-screen bg-[#0c0a09] text-neutral-100 antialiased" data-page="profile">
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <div class="absolute left-0 right-0 top-0 flex justify-center gap-1.5 py-3 opacity-75" aria-hidden="true">
+        <span class="inline-block h-0 w-0 border-l-[6px] border-r-[6px] border-b-[12px] border-l-transparent border-r-transparent border-b-red-500"></span>
+        <span class="inline-block h-0 w-0 border-l-[6px] border-r-[6px] border-b-[12px] border-l-transparent border-r-transparent border-b-yellow-400"></span>
+        <span class="inline-block h-0 w-0 border-l-[6px] border-r-[6px] border-b-[12px] border-l-transparent border-r-transparent border-b-green-500"></span>
+      </div>
+    </div>
+
+    <div class="relative z-10 mx-auto flex min-h-screen max-w-[420px] items-start justify-center px-3 py-6 md:items-center md:py-10">
+      <div
+        class="flex w-full max-w-[390px] flex-col overflow-hidden rounded-[2.75rem] border-[12px] border-neutral-800 bg-neutral-900 shadow-2xl shadow-black/70 ring-1 ring-white/[0.06]"
+      >
+        <div class="flex justify-center bg-neutral-950 pb-1 pt-3">
+          <div class="h-5 w-24 rounded-full bg-neutral-800" aria-hidden="true"></div>
+        </div>
+
+        <div class="flex max-h-[min(812px,calc(100dvh-5rem))] min-h-[520px] flex-1 flex-col bg-neutral-950">
+          <main class="min-h-0 flex-1 overflow-y-auto px-4 pb-2 pt-4">
+            <header class="mb-6 flex flex-col items-center text-center">
+              <div
+                id="profile-avatar"
+                class="flex h-20 w-20 items-center justify-center rounded-full border border-neutral-700 bg-gradient-to-br from-neutral-800 to-neutral-900 text-2xl font-semibold text-[#facc15] shadow-lg shadow-[#facc15]/10"
+              >
+                —
+              </div>
+              <p class="mt-4 text-xs font-medium uppercase tracking-wider text-neutral-500">Conta</p>
+              <h1 class="text-2xl font-semibold text-neutral-100">Perfil</h1>
+            </header>
+
+            <section class="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 shadow-lg">
+              <p class="text-xs font-medium uppercase tracking-wider text-neutral-500">E-mail</p>
+              <p id="profile-email" class="mt-1 text-sm text-neutral-200">—</p>
+
+              <div class="mt-6 grid grid-cols-2 gap-4">
+                <div class="rounded-xl border border-neutral-800 bg-neutral-950/50 p-4">
+                  <p class="text-xs text-neutral-500">Pontos</p>
+                  <p id="profile-pontos" class="mt-1 text-2xl font-bold tabular-nums text-neutral-100">0</p>
+                </div>
+                <div class="rounded-xl border border-neutral-800 bg-neutral-950/50 p-4">
+                  <p class="text-xs text-neutral-500">Streak</p>
+                  <p id="profile-streak" class="mt-1 text-2xl font-bold tabular-nums text-[#3b82f6]">0</p>
+                </div>
+              </div>
+
+              <a
+                href="map.html"
+                class="mt-6 block w-full rounded-2xl border border-neutral-800 py-3 text-center text-sm font-medium text-neutral-400 transition-all duration-200 hover:border-neutral-700 hover:text-neutral-200"
+                >Mapa do evento</a
+              >
+
+              <button
+                type="button"
+                id="profile-logout"
+                class="mt-3 w-full rounded-2xl py-3 text-sm font-medium text-neutral-500 transition-all duration-200 hover:text-[#ef4444]"
+              >
+                Sair da conta
+              </button>
+            </section>
+          </main>
+
+          <nav
+            class="shrink-0 border-t border-neutral-800 bg-neutral-900/98 px-1 pb-3 pt-2 backdrop-blur-md"
+            aria-label="Principal"
+          >
+            <div class="flex justify-around">
+              <a
+                href="index.html"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300"
+              >
+                <span class="h-0.5 w-7 rounded-full bg-transparent"></span>
+                Início
+              </a>
+              <a
+                href="scan.html"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300"
+              >
+                <span class="h-0.5 w-7 rounded-full bg-transparent"></span>
+                Escanear
+              </a>
+              <a
+                href="rewards.html"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300"
+              >
+                <span class="h-0.5 w-7 rounded-full bg-transparent"></span>
+                Recompensas
+              </a>
+              <a
+                href="profile.html"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-[#facc15] transition-all duration-200"
+              >
+                <span class="h-0.5 w-7 rounded-full bg-[#facc15]"></span>
+                Perfil
+              </a>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/arraia-app.js" defer></script>
+  </body>
+</html>
