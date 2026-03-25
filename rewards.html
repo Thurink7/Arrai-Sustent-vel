@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>Recompensas — Arraiá Sustentável</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } },
+      };
+    </script>
+    <style>
+      html {
+        font-family: Inter, system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body class="relative min-h-screen bg-[#0c0a09] text-neutral-100 antialiased" data-page="rewards">
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <div class="absolute left-0 right-0 top-0 flex justify-center gap-1.5 py-3 opacity-75" aria-hidden="true">
+        <span class="inline-block h-0 w-0 border-l-[6px] border-r-[6px] border-b-[12px] border-l-transparent border-r-transparent border-b-red-500"></span>
+        <span class="inline-block h-0 w-0 border-l-[6px] border-r-[6px] border-b-[12px] border-l-transparent border-r-transparent border-b-yellow-400"></span>
+        <span class="inline-block h-0 w-0 border-l-[6px] border-r-[6px] border-b-[12px] border-l-transparent border-r-transparent border-b-blue-500"></span>
+      </div>
+    </div>
+
+    <div class="relative z-10 mx-auto flex min-h-screen max-w-[420px] items-start justify-center px-3 py-6 md:items-center md:py-10">
+      <div
+        class="flex w-full max-w-[390px] flex-col overflow-hidden rounded-[2.75rem] border-[12px] border-neutral-800 bg-neutral-900 shadow-2xl shadow-black/70 ring-1 ring-white/[0.06]"
+      >
+        <div class="flex justify-center bg-neutral-950 pb-1 pt-3">
+          <div class="h-5 w-24 rounded-full bg-neutral-800" aria-hidden="true"></div>
+        </div>
+
+        <div class="flex max-h-[min(812px,calc(100dvh-5rem))] min-h-[480px] flex-1 flex-col bg-neutral-950">
+          <main class="min-h-0 flex-1 overflow-y-auto px-4 pb-2 pt-4">
+            <header class="mb-6">
+              <p class="text-xs font-medium uppercase tracking-wider text-neutral-500">Catálogo</p>
+              <h1 class="text-2xl font-semibold text-neutral-100">Recompensas</h1>
+              <p class="mt-1 text-sm text-neutral-400">
+                Saldo:
+                <span id="rewards-saldo" class="font-semibold text-[#facc15]">0</span>
+                pontos
+              </p>
+            </header>
+
+            <div id="rewards-list" class="grid gap-4"></div>
+          </main>
+
+          <nav
+            class="shrink-0 border-t border-neutral-800 bg-neutral-900/98 px-1 pb-3 pt-2 backdrop-blur-md"
+            aria-label="Principal"
+          >
+            <div class="flex justify-around">
+              <a
+                href="index.html"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300"
+              >
+                <span class="h-0.5 w-7 rounded-full bg-transparent"></span>
+                Início
+              </a>
+              <a
+                href="scan.html"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300"
+              >
+                <span class="h-0.5 w-7 rounded-full bg-transparent"></span>
+                Escanear
+              </a>
+              <a
+                href="rewards.html"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-[#facc15] transition-all duration-200"
+              >
+                <span class="h-0.5 w-7 rounded-full bg-[#facc15]"></span>
+                Recompensas
+              </a>
+              <a
+                href="profile.html"
+                class="flex min-w-[56px] flex-col items-center gap-0.5 text-[11px] font-medium text-neutral-500 transition-all duration-200 hover:text-neutral-300"
+              >
+                <span class="h-0.5 w-7 rounded-full bg-transparent"></span>
+                Perfil
+              </a>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/arraia-app.js" defer></script>
+  </body>
+</html>
